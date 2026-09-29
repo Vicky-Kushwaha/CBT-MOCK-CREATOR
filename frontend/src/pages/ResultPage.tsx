@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { errorMessage } from '../api/client'
 import { explainQuestion, getResult } from '../api/endpoints'
 import type { Bucket, ResultData, ResultQuestion } from '../api/types'
@@ -96,6 +96,7 @@ function QuestionCard({ q, sessionId }: { q: ResultQuestion; sessionId: number }
 }
 
 export default function ResultPage() {
+  const nav = useNavigate()
   const sessionId = Number(useParams().sessionId)
   const [filter, setFilter] = useState<'all' | 'correct' | 'incorrect' | 'unattempted'>('all')
   const res = useQuery({ queryKey: ['result', sessionId], queryFn: () => getResult(sessionId) })
@@ -109,7 +110,10 @@ export default function ResultPage() {
 
   return (
     <div className="space-y-6">
-      <div className="card text-center">
+      <div className="card text-center relative pt-8">
+        <button onClick={() => nav(-1)} className="absolute top-4 left-4 flex items-center justify-center rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700" title="Go back">
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+        </button>
         <p className="text-sm text-ink-soft">{mock.title}</p>
         <h1 className="mt-1 text-sm font-semibold uppercase tracking-wide text-ink-soft">Mock test result</h1>
         <p className="mt-2 text-5xl font-semibold text-rail">{r.score} <span className="text-2xl text-ink-soft">/ {r.total_marks}</span></p>

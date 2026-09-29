@@ -1,4 +1,5 @@
 from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -45,7 +46,15 @@ class MockTestViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.D
     serializer_class = MockTestSerializer
 
     def get_queryset(self):
-        return MockTest.objects.filter(owner=self.request.user).select_related("exam").prefetch_related("questions")
+        return MockTest.objects.filter(owner=self.request.user).select_related("exam").prefetch_related(
+            "questions__question__options", "questions__question__subject", "questions__question__topic", "questions__question__explanation"
+        )
+
+    @action(detail=True, methods=["get"])
+    def answer_key(self, request, pk=None):
+        mock = self.get_object()
+        from .serializers import MockTestAnswerKeySerializer
+        return Response(MockTestAnswerKeySerializer(mock).data)
 
     def create(self, request):
         s = SelectionSerializer(data=request.data)

@@ -1,6 +1,6 @@
 import { api } from './client'
 import type {
-  AnalyticsSummary, Availability, Exam, GenerationJob, HistoryRow, Mock, Paper, ResultData, SessionData, Subject,
+  AnalyticsSummary, Availability, Exam, GenerationJob, HistoryRow, Mock, MockAnswerKeyData, Paper, ResultData, SessionData, Subject,
 } from './types'
 
 export const login = (username: string, password: string) =>
@@ -43,6 +43,7 @@ export const createMock = (exam: string, paper_ids: number[], title: string) =>
   api.post<Mock>('/mocks/', { exam, paper_ids, title }).then((r) => r.data)
 export const listMocks = () => api.get<Mock[]>('/mocks/').then((r) => r.data)
 export const getMock = (id: number) => api.get<Mock>(`/mocks/${id}/`).then((r) => r.data)
+export const getMockAnswerKey = (id: number) => api.get<MockAnswerKeyData>(`/mocks/${id}/answer_key/`).then((r) => r.data)
 export const deleteMock = (id: number) => api.delete(`/mocks/${id}/`)
 
 export const startSession = (mock: number) => api.post<SessionData>('/sessions/', { mock }).then((r) => r.data)

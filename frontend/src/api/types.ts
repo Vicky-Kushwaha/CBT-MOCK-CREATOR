@@ -31,6 +31,13 @@ export interface Mock {
   sections: { name: string; count: number; marks_per_question: number; negative_marks: number }[]
 }
 
+export interface MockAnswerKeyQuestion {
+  id: number; order: number; section_name: string; marks: number; negative_marks: number
+  text: string; subject: string | null; topic: string | null; explanation: string | null
+  options: { id: number; text: string; is_correct: boolean }[]
+}
+export interface MockAnswerKeyData { id: number; title: string; questions: MockAnswerKeyQuestion[] }
+
 export interface SessionQuestion {
   id: number; order: number; section: string; text: string; marks: number; negative_marks: number
   options: { id: number; text: string }[]

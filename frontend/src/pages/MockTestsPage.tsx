@@ -113,9 +113,14 @@ export default function MockTestsPage() {
                   </div>
                 </div>
                 
-                <button className="w-full rounded-xl bg-slate-50 py-3 font-bold text-slate-600 transition-all group-hover:bg-indigo-600 group-hover:text-white group-hover:shadow-md" onClick={() => nav(`/mocks/${m.id}/instructions`)}>
-                  Take Test
-                </button>
+                <div className="flex flex-col gap-2">
+                  <button className="w-full rounded-xl bg-slate-50 py-2.5 font-bold text-slate-600 transition-all hover:bg-slate-200" onClick={() => nav(`/mocks/${m.id}/key`)}>
+                    View Answer Key
+                  </button>
+                  <button className="w-full rounded-xl bg-indigo-50 py-3 font-bold text-indigo-700 transition-all hover:bg-indigo-600 hover:text-white hover:shadow-md" onClick={() => nav(`/mocks/${m.id}/instructions`)}>
+                    Take Test
+                  </button>
+                </div>
               </div>
             ))}
           </div>

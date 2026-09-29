@@ -31,7 +31,11 @@ export default function MockInstructions() {
     <div className="mx-auto max-w-4xl pb-12 pt-4">
       {/* Header Card */}
       <div className="overflow-hidden rounded-3xl bg-white shadow-lg border border-slate-100 mb-8 relative">
-        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-indigo-600 to-blue-500"></div>
+        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-indigo-600 to-blue-500">
+          <button onClick={() => nav(-1)} className="absolute top-4 left-4 flex items-center justify-center rounded-full bg-white/20 p-2 text-white transition-colors hover:bg-white/30" title="Go back">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+          </button>
+        </div>
         <div className="relative z-10 px-8 pt-20 pb-8 text-center">
           <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-xl text-3xl">
             📝

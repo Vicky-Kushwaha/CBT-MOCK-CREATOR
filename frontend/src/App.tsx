@@ -10,6 +10,8 @@ import MockInstructions from './pages/MockInstructions'
 import Register from './pages/Register'
 import ResultPage from './pages/ResultPage'
 import MockTestsPage from './pages/MockTestsPage'
+import MockAnswerKeyPage from './pages/MockAnswerKeyPage'
+import HistoryPage from './pages/HistoryPage'
 
 import McpGuidePage from './pages/McpGuidePage'
 
@@ -22,9 +24,11 @@ export default function App() {
         <Route path="/exam/:sessionId" element={<ExamPage />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/history" element={<HistoryPage />} />
           <Route path="/tests" element={<MockTestsPage />} />
           <Route path="/create" element={<CreateMockPage />} />
           <Route path="/mocks/:id/instructions" element={<MockInstructions />} />
+          <Route path="/mocks/:mockId/key" element={<MockAnswerKeyPage />} />
           <Route path="/result/:sessionId" element={<ResultPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/mcp" element={<McpGuidePage />} />

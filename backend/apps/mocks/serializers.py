@@ -41,3 +41,32 @@ class GenerationJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenerationJob
         fields = ("id", "status", "created_count", "error")
+
+from apps.questions.models import QuestionOption
+from apps.mocks.models import MockQuestion
+
+class MockQuestionKeyOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionOption
+        fields = ("id", "text", "is_correct")
+
+class MockQuestionKeySerializer(serializers.ModelSerializer):
+    text = serializers.CharField(source="question.text")
+    subject = serializers.CharField(source="question.subject.name", allow_null=True, read_only=True)
+    topic = serializers.CharField(source="question.topic.name", allow_null=True, read_only=True)
+    explanation = serializers.CharField(source="question.explanation.text", allow_null=True, read_only=True)
+    options = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = MockQuestion
+        fields = ("id", "order", "section_name", "marks", "negative_marks", 
+                  "text", "subject", "topic", "explanation", "options")
+
+    def get_options(self, obj):
+        return MockQuestionKeyOptionSerializer(obj.question.options.all(), many=True).data
+
+class MockTestAnswerKeySerializer(serializers.ModelSerializer):
+    questions = MockQuestionKeySerializer(many=True, read_only=True)
+    class Meta:
+        model = MockTest
+        fields = ("id", "title", "questions")

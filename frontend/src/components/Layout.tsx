@@ -38,6 +38,10 @@ export default function Layout() {
             <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
             {!collapsed && <span>Mock Tests</span>}
           </NavLink>
+          <NavLink to="/history" className={navLinkClass} title="Test History">
+            <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            {!collapsed && <span>Test History</span>}
+          </NavLink>
           <NavLink to="/create" className={navLinkClass} title="Create Mock">
             <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
             {!collapsed && <span>Create mock</span>}
@@ -99,6 +103,9 @@ export default function Layout() {
               </NavLink>
               <NavLink to="/tests" className={navLinkClass} onClick={() => setCollapsed(false)}>
                 Mock Tests
+              </NavLink>
+              <NavLink to="/history" className={navLinkClass} onClick={() => setCollapsed(false)}>
+                Test History
               </NavLink>
               <NavLink to="/create" className={navLinkClass} onClick={() => setCollapsed(false)}>
                 Create mock
