@@ -24,7 +24,8 @@ class Question(models.Model):
     subject = models.ForeignKey("exams.Subject", null=True, blank=True, on_delete=models.SET_NULL)
     topic = models.ForeignKey("exams.Topic", null=True, blank=True, on_delete=models.SET_NULL)
     paper = models.ForeignKey("papers.QuestionPaper", null=True, blank=True, on_delete=models.SET_NULL, related_name="questions")
-    text = models.TextField()
+    text = models.TextField(blank=True)
+    text_hi = models.TextField(blank=True)
     difficulty = models.CharField(max_length=10, choices=Difficulty.choices, default=Difficulty.MEDIUM)
     origin = models.CharField(max_length=20, choices=Origin.choices, default=Origin.EXTRACTED)
     answer_source = models.CharField(max_length=10, choices=AnswerSource.choices, default=AnswerSource.MISSING)
@@ -43,7 +44,8 @@ class Question(models.Model):
 
 class QuestionOption(models.Model):
     question = models.ForeignKey(Question, related_name="options", on_delete=models.CASCADE)
-    text = models.TextField()
+    text = models.TextField(blank=True)
+    text_hi = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0)
     is_correct = models.BooleanField(default=False)
 
@@ -53,5 +55,6 @@ class QuestionOption(models.Model):
 
 class QuestionExplanation(models.Model):
     question = models.OneToOneField(Question, related_name="explanation", on_delete=models.CASCADE)
-    text = models.TextField()
+    text = models.TextField(blank=True)
+    text_hi = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

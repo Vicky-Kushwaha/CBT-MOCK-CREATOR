@@ -27,7 +27,8 @@ export default function ExamPage() {
   const [showSubmit, setShowSubmit] = useState(false)
   const fullscreen = useFullscreen()
 
-  const { questions, answers, currentIndex, remaining, phase, title } = useExamStore()
+  const { questions, answers, currentIndex, remaining, phase, title, language } = useExamStore()
+  const [prefLang, setPrefLang] = useState<'english' | 'hindi'>('english')
   const load = useExamStore((s) => s.load)
   const sections = useMemo(() => deriveSections(questions), [questions])
   const active = phase === 'active'
@@ -118,6 +119,16 @@ export default function ExamPage() {
       <header className="flex flex-wrap items-center justify-between gap-3 bg-rail px-4 py-3 text-white">
         <h1 className="text-base font-semibold sm:text-lg">{title}</h1>
         <div className="flex items-center gap-3">
+          {language === 'both' && (
+            <select
+              className="rounded bg-white/15 px-3 py-1.5 text-sm font-medium outline-none text-white focus:bg-white focus:text-rail transition-colors"
+              value={prefLang}
+              onChange={(e) => setPrefLang(e.target.value as any)}
+            >
+              <option value="english">English</option>
+              <option value="hindi">Hindi</option>
+            </select>
+          )}
           <div
             className={`rounded bg-white/15 px-3 py-1 font-mono text-lg tabular-nums ${remaining <= 300 ? 'bg-red-600' : ''}`}
             role="timer" aria-label="Time remaining"
@@ -162,7 +173,7 @@ export default function ExamPage() {
               {currentSection?.name} · +{q.marks} for correct{q.negative_marks > 0 ? `, −${q.negative_marks} for wrong` : ''}
             </span>
           </div>
-          <p className="whitespace-pre-wrap text-lg leading-relaxed">{q.text}</p>
+          <p className="whitespace-pre-wrap text-lg leading-relaxed">{prefLang === 'hindi' && q.text_hi ? q.text_hi : q.text}</p>
 
           <div className="mt-6 space-y-3" role="radiogroup" aria-label="Options">
             {q.options.map((o, i) => (
@@ -176,7 +187,7 @@ export default function ExamPage() {
                   type="radio" name={`q-${q.id}`} checked={a.selected === o.id}
                   onChange={() => useExamStore.getState().select(o.id)} className="mt-1"
                 />
-                <span><span className="mr-2 font-semibold text-ink-soft">{'ABCDEF'[i]}.</span>{o.text}</span>
+                <span><span className="mr-2 font-semibold text-ink-soft">{'ABCDEF'[i]}.</span>{prefLang === 'hindi' && o.text_hi ? o.text_hi : o.text}</span>
               </label>
             ))}
           </div>

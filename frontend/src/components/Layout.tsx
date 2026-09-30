@@ -30,7 +30,7 @@ export default function Layout() {
         </div>
         
         <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-          <NavLink to="/" end className={navLinkClass} title="Dashboard">
+          <NavLink to="/dashboard" end className={navLinkClass} title="Dashboard">
             <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
             {!collapsed && <span>Dashboard</span>}
           </NavLink>
@@ -98,7 +98,7 @@ export default function Layout() {
         {collapsed && (
           <div className="absolute top-16 left-0 right-0 z-50 border-b border-slate-200 bg-white p-4 shadow-lg md:hidden">
             <nav className="flex flex-col gap-2">
-              <NavLink to="/" end className={navLinkClass} onClick={() => setCollapsed(false)}>
+              <NavLink to="/dashboard" end className={navLinkClass} onClick={() => setCollapsed(false)}>
                 Dashboard
               </NavLink>
               <NavLink to="/tests" className={navLinkClass} onClick={() => setCollapsed(false)}>

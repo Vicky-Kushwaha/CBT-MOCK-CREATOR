@@ -20,6 +20,7 @@ export const backupKey = (sessionId: number) => `cbt-session-${sessionId}`
 interface ExamState {
   sessionId: number | null
   title: string
+  language: string
   questions: SessionQuestion[]
   answers: Record<number, AnswerState>
   dirty: Record<number, true>
@@ -42,7 +43,7 @@ interface ExamState {
 }
 
 const initial = {
-  sessionId: null, title: '', questions: [], answers: {}, dirty: {}, currentIndex: 0,
+  sessionId: null, title: '', language: 'english', questions: [], answers: {}, dirty: {}, currentIndex: 0,
   expiresAtMs: 0, clockOffsetMs: 0, remaining: 0, phase: 'idle' as const,
 }
 
@@ -74,7 +75,7 @@ export const useExamStore = create<ExamState>((set, get) => ({
     const serverNow = new Date(s.server_time).getTime()
     const expiresAtMs = new Date(s.expires_at).getTime()
     set({
-      sessionId: s.id, title: s.mock.title, questions: s.questions, answers, dirty, currentIndex: index,
+      sessionId: s.id, title: s.mock.title, language: s.mock.language || 'english', questions: s.questions, answers, dirty, currentIndex: index,
       expiresAtMs, clockOffsetMs: serverNow - Date.now(), remaining: s.remaining_seconds, phase: 'active',
     })
   },

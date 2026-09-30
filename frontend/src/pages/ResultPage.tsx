@@ -44,7 +44,7 @@ function BucketTable({ title, rows, showSubject }: { title: string; rows: Bucket
   )
 }
 
-function QuestionCard({ q, sessionId }: { q: ResultQuestion; sessionId: number }) {
+function QuestionCard({ q, sessionId, prefLang }: { q: ResultQuestion; sessionId: number; prefLang: 'english' | 'hindi' }) {
   const qc = useQueryClient()
   const explain = useMutation({
     mutationFn: () => explainQuestion(q.question_id),
@@ -63,7 +63,7 @@ function QuestionCard({ q, sessionId }: { q: ResultQuestion; sessionId: number }
         <span className={`rounded px-2 py-0.5 capitalize ${OUTCOME[q.outcome]}`}>{q.outcome}</span>
         <span className="text-ink-soft">{q.marks_awarded > 0 ? '+' : ''}{q.marks_awarded} / {q.marks} · {formatDuration(q.time_spent)}</span>
       </div>
-      <p className="whitespace-pre-line text-sm font-medium">{q.text}</p>
+      <p className="whitespace-pre-line text-sm font-medium">{prefLang === 'hindi' && q.text_hi ? q.text_hi : q.text}</p>
       <ul className="mt-3 space-y-1.5">
         {q.options.map((o, i) => {
           const chosen = o.id === q.selected_option
@@ -71,7 +71,7 @@ function QuestionCard({ q, sessionId }: { q: ResultQuestion; sessionId: number }
           return (
             <li key={o.id} className={`flex gap-2 rounded border px-3 py-2 text-sm ${cls}`}>
               <span className="font-semibold">{String.fromCharCode(65 + i)}.</span>
-              <span className="flex-1">{o.text}</span>
+              <span className="flex-1">{prefLang === 'hindi' && o.text_hi ? o.text_hi : o.text}</span>
               {o.is_correct && <span className="text-xs font-medium text-green-700">Correct</span>}
               {chosen && !o.is_correct && <span className="text-xs font-medium text-red-700">Your answer</span>}
               {chosen && o.is_correct && <span className="text-xs font-medium text-green-700">Your answer</span>}
@@ -81,7 +81,7 @@ function QuestionCard({ q, sessionId }: { q: ResultQuestion; sessionId: number }
       </ul>
       <div className="mt-3 text-sm">
         {q.explanation
-          ? <div className="rounded bg-blue-50 p-3 text-ink-soft"><b className="text-ink">Solution: </b><span className="whitespace-pre-line">{q.explanation}</span></div>
+          ? <div className="rounded bg-blue-50 p-3 text-ink-soft"><b className="text-ink">Solution: </b><span className="whitespace-pre-line">{prefLang === 'hindi' && q.explanation_hi ? q.explanation_hi : q.explanation}</span></div>
           : (
             <>
               <button className="btn-outline" disabled={explain.isPending} onClick={() => explain.mutate()}>
@@ -99,6 +99,7 @@ export default function ResultPage() {
   const nav = useNavigate()
   const sessionId = Number(useParams().sessionId)
   const [filter, setFilter] = useState<'all' | 'correct' | 'incorrect' | 'unattempted'>('all')
+  const [prefLang, setPrefLang] = useState<'english' | 'hindi'>('english')
   const res = useQuery({ queryKey: ['result', sessionId], queryFn: () => getResult(sessionId) })
 
   if (res.isLoading) return <p className="text-ink-soft">Loading result…</p>
@@ -180,10 +181,20 @@ export default function ResultPage() {
               <button key={f} onClick={() => setFilter(f)}
                 className={`rounded px-3 py-1 text-sm capitalize ${filter === f ? 'bg-rail text-white' : 'border border-slate-300 bg-white'}`}>{f}</button>
             ))}
+            {mock.language === 'both' && (
+              <select
+                className="ml-2 rounded border border-slate-300 bg-white px-3 py-1 text-sm outline-none"
+                value={prefLang}
+                onChange={(e) => setPrefLang(e.target.value as any)}
+              >
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+              </select>
+            )}
           </div>
         </div>
         <div className="space-y-4">
-          {shown.map((q) => <QuestionCard key={q.mock_question} q={q} sessionId={sessionId} />)}
+          {shown.map((q) => <QuestionCard key={q.mock_question} q={q} sessionId={sessionId} prefLang={prefLang} />)}
           {shown.length === 0 && <p className="text-sm text-ink-soft">No questions in this filter.</p>}
         </div>
       </div>

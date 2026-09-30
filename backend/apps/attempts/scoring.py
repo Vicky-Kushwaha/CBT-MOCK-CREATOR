@@ -28,8 +28,8 @@ def evaluate(session) -> dict:
         explanation = getattr(mq.question, "explanation", None)
         rows.append({
             "mock_question": mq.id, "question_id": mq.question_id, "order": mq.order, "section": mq.section_name,
-            "text": mq.question.text,
-            "options": [{"id": o.id, "text": o.text, "is_correct": o.is_correct} for o in options],
+            "text": mq.question.text, "text_hi": mq.question.text_hi,
+            "options": [{"id": o.id, "text": o.text, "text_hi": o.text_hi, "is_correct": o.is_correct} for o in options],
             "selected_option": selected, "correct_option": correct.id if correct else None,
             "outcome": outcome, "marks_awarded": awarded, "marks": mq.marks,
             "time_spent": ans.time_spent_seconds if ans else 0,
@@ -38,6 +38,7 @@ def evaluate(session) -> dict:
             "topic_id": mq.question.topic_id,
             "topic": mq.question.topic.name if mq.question.topic else None,
             "explanation": explanation.text if explanation else None,
+            "explanation_hi": explanation.text_hi if explanation else None,
         })
 
     correct_n = sum(r["outcome"] == "correct" for r in rows)

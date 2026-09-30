@@ -20,6 +20,8 @@ export default function MockAnswerKeyPage() {
   }
 
   const { title, questions } = query.data
+  const hasHindi = questions.some(q => q.text_hi)
+  const [prefLang, setPrefLang] = useState<'english' | 'hindi'>('english')
 
   return (
     <div className="space-y-6 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -31,6 +33,16 @@ export default function MockAnswerKeyPage() {
           <h1 className="text-2xl font-bold text-slate-900">Answer Key</h1>
           <p className="mt-1 text-slate-500 font-medium">{title}</p>
         </div>
+        {hasHindi && (
+          <select
+            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 outline-none hover:border-indigo-300 focus:border-indigo-500"
+            value={prefLang}
+            onChange={(e) => setPrefLang(e.target.value as any)}
+          >
+            <option value="english">English</option>
+            <option value="hindi">Hindi</option>
+          </select>
+        )}
       </div>
 
       <div className="card">
@@ -60,7 +72,7 @@ export default function MockAnswerKeyPage() {
               <span className="text-slate-400">+{q.marks} / -{q.negative_marks}</span>
             </div>
             
-            <p className="whitespace-pre-line text-[15px] font-medium text-slate-800 mb-5">{q.text}</p>
+            <p className="whitespace-pre-line text-[15px] font-medium text-slate-800 mb-5">{prefLang === 'hindi' && q.text_hi ? q.text_hi : q.text}</p>
             
             <ul className="space-y-2">
               {q.options.map((o, i) => {
@@ -70,7 +82,7 @@ export default function MockAnswerKeyPage() {
                 return (
                   <li key={o.id} className={`flex gap-3 rounded-xl border p-3 text-sm transition-all ${cls}`}>
                     <span className={`font-bold ${o.is_correct ? 'text-emerald-700' : 'text-slate-400'}`}>{String.fromCharCode(65 + i)}.</span>
-                    <span className={`flex-1 ${o.is_correct ? 'text-emerald-900 font-medium' : 'text-slate-600'}`}>{o.text}</span>
+                    <span className={`flex-1 ${o.is_correct ? 'text-emerald-900 font-medium' : 'text-slate-600'}`}>{prefLang === 'hindi' && o.text_hi ? o.text_hi : o.text}</span>
                     {o.is_correct && (
                       <span className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-100/50 px-2 py-0.5 rounded uppercase tracking-wide">
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
@@ -88,7 +100,7 @@ export default function MockAnswerKeyPage() {
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   Solution / Explanation
                 </div>
-                <div className="whitespace-pre-line text-sm text-slate-700">{q.explanation}</div>
+                <div className="whitespace-pre-line text-sm text-slate-700">{prefLang === 'hindi' && q.explanation_hi ? q.explanation_hi : q.explanation}</div>
               </div>
             )}
           </div>

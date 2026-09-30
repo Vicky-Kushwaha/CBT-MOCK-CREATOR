@@ -36,11 +36,11 @@ export const explainQuestion = (id: number) =>
 
 export const checkAvailability = (exam: string, paper_ids: number[]) =>
   api.post<Availability>('/mocks/availability/', { exam, paper_ids }).then((r) => r.data)
-export const startGeneration = (exam: string, paper_ids: number[]) =>
-  api.post<GenerationJob>('/mocks/generate-missing/', { exam, paper_ids }).then((r) => r.data)
+export const startGeneration = (exam: string, paper_ids: number[], language: string = 'english') =>
+  api.post<GenerationJob>('/mocks/generate-missing/', { exam, paper_ids, language }).then((r) => r.data)
 export const getGenerationJob = (id: number) => api.get<GenerationJob>(`/mocks/generation-jobs/${id}/`).then((r) => r.data)
-export const createMock = (exam: string, paper_ids: number[], title: string) =>
-  api.post<Mock>('/mocks/', { exam, paper_ids, title }).then((r) => r.data)
+export const createMock = (exam: string, paper_ids: number[], title: string, language: string = 'english') =>
+  api.post<Mock>('/mocks/', { exam, paper_ids, title, language }).then((r) => r.data)
 export const listMocks = () => api.get<Mock[]>('/mocks/').then((r) => r.data)
 export const getMock = (id: number) => api.get<Mock>(`/mocks/${id}/`).then((r) => r.data)
 export const getMockAnswerKey = (id: number) => api.get<MockAnswerKeyData>(`/mocks/${id}/answer_key/`).then((r) => r.data)

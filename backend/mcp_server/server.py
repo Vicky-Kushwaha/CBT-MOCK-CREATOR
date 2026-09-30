@@ -66,10 +66,10 @@ def _user(username: str):
 
 def _q(q: Question) -> dict:
     return {
-        "id": q.id, "text": q.text, "subject": q.subject.name if q.subject else None,
+        "id": q.id, "text": q.text, "text_hi": q.text_hi, "subject": q.subject.name if q.subject else None,
         "topic": q.topic.name if q.topic else None, "difficulty": q.difficulty, "valid": q.is_valid,
         "notes": q.validation_notes, "answer_source": q.answer_source,
-        "options": [{"index": i, "text": o.text, "correct": o.is_correct} for i, o in enumerate(q.options.all())],
+        "options": [{"index": i, "text": o.text, "text_hi": o.text_hi, "correct": o.is_correct} for i, o in enumerate(q.options.all())],
     }
 
 
@@ -183,10 +183,11 @@ def create_questions(username: str, exam: str, questions: list[dict]) -> dict:
     for item in questions:
         try:
             q = services.create_question(
-                owner=user, exam=ex, subject=item.get("subject"), topic=item.get("topic"), text=item.get("question", ""),
-                options=item.get("options", []), correct_index=item.get("correct_index"),
+                owner=user, exam=ex, subject=item.get("subject"), topic=item.get("topic"), 
+                text=item.get("question", ""), text_hi=item.get("question_hi", ""),
+                options=item.get("options", []), options_hi=item.get("options_hi", []), correct_index=item.get("correct_index"),
                 difficulty=item.get("difficulty", "medium"), origin=Question.Origin.AI_GENERATED, source="Claude via MCP",
-                explanation=item.get("explanation", ""), answer_source=Question.AnswerSource.AI,
+                explanation=item.get("explanation", ""), explanation_hi=item.get("explanation_hi", ""), answer_source=Question.AnswerSource.AI,
             )
             (created if q.is_valid else skipped).append(q.id if q.is_valid else {"id": q.id, "notes": q.validation_notes})
         except services.DuplicateQuestion:
@@ -217,10 +218,10 @@ def get_missing_question_brief(username: str, exam: str, paper_ids: list[int]) -
 
 @mcp.tool()
 @db_tool
-def create_mock_test(username: str, exam: str, paper_ids: list[int], title: str | None = None) -> dict:
+def create_mock_test(username: str, exam: str, paper_ids: list[int], title: str | None = None, language: str = "english") -> dict:
     """Build the mock deterministically. If questions are insufficient, returns availability instead of a mock."""
     try:
-        mock = builder.create_mock(_user(username), _exam(exam), paper_ids, title)
+        mock = builder.create_mock(_user(username), _exam(exam), paper_ids, title, language)
     except builder.InsufficientQuestions as e:
         return {"created": False, "availability": e.availability}
     return {"created": True, "mock_id": mock.id, "title": mock.title, "questions": mock.questions.count()}

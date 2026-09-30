@@ -9,6 +9,7 @@ export default function MockTestsPage() {
   const nav = useNavigate()
   const qc = useQueryClient()
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
+  const [visibleCount, setVisibleCount] = useState(12)
   
   const mocks = useQuery({ queryKey: ['mocks'], queryFn: listMocks })
   const del = useMutation({
@@ -65,14 +66,13 @@ export default function MockTestsPage() {
         </div>
       )}
 
-      {categories.length > 0 && (
         <div className="space-y-6">
           {/* Category Tabs */}
           <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-4">
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => { setActiveCategory(cat); setVisibleCount(12); }}
                 className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
                   selectedCategory === cat
                     ? 'bg-indigo-600 text-white shadow-md'
@@ -86,7 +86,7 @@ export default function MockTestsPage() {
 
           {/* Mocks Grid */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {displayedMocks?.map((m) => (
+            {displayedMocks?.slice(0, visibleCount).map((m) => (
               <div key={m.id} className="group relative flex flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-indigo-100">
                 <div className="mb-4 flex items-start gap-4">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md">
@@ -124,8 +124,19 @@ export default function MockTestsPage() {
               </div>
             ))}
           </div>
+          
+          {displayedMocks && visibleCount < displayedMocks.length && (
+            <div className="pt-6 pb-2 text-center">
+              <button 
+                onClick={() => setVisibleCount(v => v + 12)} 
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900"
+              >
+                Load More
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+            </div>
+          )}
         </div>
-      )}
 
       <ConfirmModal
         isOpen={deleteTarget !== null}

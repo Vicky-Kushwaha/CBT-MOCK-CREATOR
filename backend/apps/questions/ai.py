@@ -63,7 +63,13 @@ def classify_questions(items: list[dict], allowed: dict[str, list[str]]) -> list
     return data if isinstance(data, list) else []
 
 
-def generate_questions(exam_name, subject, topics, count, difficulty_mix, avoid) -> list[dict]:
+def generate_questions(exam_name, subject, topics, count, difficulty_mix, avoid, language="english") -> list[dict]:
+    lang_prompt = "Write the questions, options, and explanation in English. Leave the `_hi` fields empty."
+    if language == "hindi":
+        lang_prompt = "Write the questions, options, and explanation entirely in Hindi. Put them in the `_hi` fields. Leave the English fields empty."
+    elif language == "both":
+        lang_prompt = "Write the questions, options, and explanation in BOTH English and Hindi. Use the base fields for English, and the `_hi` fields for Hindi."
+
     user = (
         f"Write {count} new, original multiple-choice questions for the {exam_name} exam.\n"
         f"Subject: {subject}\nPreferred topics (mix them): {json.dumps(topics)}\n"
@@ -71,8 +77,9 @@ def generate_questions(exam_name, subject, topics, count, difficulty_mix, avoid)
         "Each question needs exactly 4 options and exactly one correct option. Questions must be unambiguous, "
         "factually correct and match the style and difficulty of the real exam.\n"
         f"Do not repeat or paraphrase these existing questions: {json.dumps(avoid, ensure_ascii=False)}\n\n"
-        'Return a JSON array of objects: {"question": str, "options": [str, str, str, str], '
-        '"correct_index": 0-3, "topic": str, "difficulty": "easy|medium|hard", "explanation": str}'
+        f"LANGUAGE INSTRUCTION: {lang_prompt}\n\n"
+        'Return a JSON array of objects: {"question": str, "question_hi": str, "options": [str, str, str, str], "options_hi": [str, str, str, str], '
+        '"correct_index": 0-3, "topic": str, "difficulty": "easy|medium|hard", "explanation": str, "explanation_hi": str}'
     )
     data = _parse_json(_call(JSON_SYSTEM, user, max_tokens=12000))
     return data if isinstance(data, list) else []

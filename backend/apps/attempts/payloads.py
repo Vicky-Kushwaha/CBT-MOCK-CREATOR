@@ -5,7 +5,7 @@ from . import scoring
 
 def _mock_info(mock):
     return {
-        "id": mock.id, "title": mock.title, "exam_name": mock.exam.name,
+        "id": mock.id, "title": mock.title, "exam_name": mock.exam.name, "language": mock.language,
         "duration_minutes": mock.duration_minutes, "total_marks": float(mock.total_marks),
     }
 
@@ -23,9 +23,9 @@ def session_payload(session) -> dict:
         "current_index": session.current_index,
         "questions": [
             {
-                "id": mq.id, "order": mq.order, "section": mq.section_name, "text": mq.question.text,
+                "id": mq.id, "order": mq.order, "section": mq.section_name, "text": mq.question.text, "text_hi": mq.question.text_hi,
                 "marks": float(mq.marks), "negative_marks": float(mq.negative_marks),
-                "options": [{"id": o.id, "text": o.text} for o in mq.question.options.all()],
+                "options": [{"id": o.id, "text": o.text, "text_hi": o.text_hi} for o in mq.question.options.all()],
             }
             for mq in mqs
         ],

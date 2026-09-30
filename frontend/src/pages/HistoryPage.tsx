@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { listSessions } from '../api/endpoints'
 import { errorMessage } from '../api/client'
 
 export default function HistoryPage() {
+  const [visibleCount, setVisibleCount] = useState(20)
   const sessions = useQuery({ queryKey: ['sessions'], queryFn: listSessions })
 
   return (
@@ -49,7 +51,7 @@ export default function HistoryPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
-                {sessions.data.map((s) => (
+                {sessions.data.slice(0, visibleCount).map((s) => (
                   <tr key={s.id} className="transition-colors hover:bg-slate-50/50">
                     <td className="px-6 py-4 font-medium text-slate-900">{s.mock_title}</td>
                     <td className="px-6 py-4">{new Date(s.started_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</td>
@@ -70,6 +72,18 @@ export default function HistoryPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {sessions.data && visibleCount < sessions.data.length && (
+        <div className="pt-4 pb-2 text-center">
+          <button 
+            onClick={() => setVisibleCount(v => v + 20)} 
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900"
+          >
+            Load More
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </button>
         </div>
       )}
     </div>

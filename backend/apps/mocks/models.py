@@ -7,9 +7,15 @@ class MockTest(models.Model):
         READY = "ready"
         ARCHIVED = "archived"
 
+    class Language(models.TextChoices):
+        ENGLISH = "english", "English"
+        HINDI = "hindi", "Hindi"
+        BOTH = "both", "Both"
+
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="mocks")
     exam = models.ForeignKey("exams.Exam", on_delete=models.PROTECT)
     title = models.CharField(max_length=200)
+    language = models.CharField(max_length=10, choices=Language.choices, default=Language.ENGLISH)
     # Snapshot of the pattern at creation time, so later pattern edits never change old mocks.
     duration_minutes = models.PositiveIntegerField()
     total_marks = models.DecimalField(max_digits=8, decimal_places=2)
@@ -49,6 +55,7 @@ class GenerationJob(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     exam = models.ForeignKey("exams.Exam", on_delete=models.CASCADE)
     paper_ids = models.JSONField(default=list)
+    language = models.CharField(max_length=10, choices=MockTest.Language.choices, default=MockTest.Language.ENGLISH)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
     created_count = models.PositiveIntegerField(default=0)
     error = models.TextField(blank=True)

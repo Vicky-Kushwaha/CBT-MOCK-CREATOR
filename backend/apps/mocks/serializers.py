@@ -9,6 +9,7 @@ class SelectionSerializer(serializers.Serializer):
     exam = serializers.SlugRelatedField(slug_field="slug", queryset=Exam.objects.filter(is_active=True))
     paper_ids = serializers.ListField(child=serializers.IntegerField(), required=False, default=list)
     title = serializers.CharField(required=False, allow_blank=True, default="")
+    language = serializers.ChoiceField(choices=["english", "hindi", "both"], required=False, default="english")
 
 
 class MockTestSerializer(serializers.ModelSerializer):
@@ -19,7 +20,7 @@ class MockTestSerializer(serializers.ModelSerializer):
     class Meta:
         model = MockTest
         fields = (
-            "id", "title", "exam", "exam_name", "duration_minutes", "total_marks", "instructions",
+            "id", "title", "exam", "exam_name", "language", "duration_minutes", "total_marks", "instructions",
             "status", "total_questions", "sections", "created_at",
         )
 
@@ -48,19 +49,21 @@ from apps.mocks.models import MockQuestion
 class MockQuestionKeyOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionOption
-        fields = ("id", "text", "is_correct")
+        fields = ("id", "text", "text_hi", "is_correct")
 
 class MockQuestionKeySerializer(serializers.ModelSerializer):
     text = serializers.CharField(source="question.text")
+    text_hi = serializers.CharField(source="question.text_hi", allow_blank=True)
     subject = serializers.CharField(source="question.subject.name", allow_null=True, read_only=True)
     topic = serializers.CharField(source="question.topic.name", allow_null=True, read_only=True)
     explanation = serializers.CharField(source="question.explanation.text", allow_null=True, read_only=True)
+    explanation_hi = serializers.CharField(source="question.explanation.text_hi", allow_null=True, read_only=True)
     options = serializers.SerializerMethodField()
     
     class Meta:
         model = MockQuestion
         fields = ("id", "order", "section_name", "marks", "negative_marks", 
-                  "text", "subject", "topic", "explanation", "options")
+                  "text", "text_hi", "subject", "topic", "explanation", "explanation_hi", "options")
 
     def get_options(self, obj):
         return MockQuestionKeyOptionSerializer(obj.question.options.all(), many=True).data

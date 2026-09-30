@@ -84,9 +84,9 @@ def set_correct_option(q: Question, index: int, source: str) -> None:
 
 
 @transaction.atomic
-def create_question(*, owner, exam=None, subject=None, topic=None, text, options, correct_index=None,
+def create_question(*, owner, exam=None, subject=None, topic=None, text, text_hi="", options, options_hi=None, correct_index=None,
                     difficulty="medium", origin=Question.Origin.MANUAL, source="", paper=None,
-                    explanation="", answer_source=None, allow_duplicates=False) -> Question:
+                    explanation="", explanation_hi="", answer_source=None, allow_duplicates=False) -> Question:
     text = clean(text)
     options = [clean(o) for o in options]
     digest = content_hash(text, options)
@@ -100,17 +100,18 @@ def create_question(*, owner, exam=None, subject=None, topic=None, text, options
         topic = resolve_topic(subject, topic)
     has_answer = correct_index is not None and 0 <= correct_index < len(options)
     q = Question.objects.create(
-        owner=owner, exam=exam, subject=subject, topic=topic, paper=paper, text=text,
+        owner=owner, exam=exam, subject=subject, topic=topic, paper=paper, text=text, text_hi=clean(text_hi),
         difficulty=difficulty if difficulty in DIFFICULTIES else "medium", origin=origin, source=source[:255],
         answer_source=answer_source or (Question.AnswerSource.KEY if has_answer else Question.AnswerSource.MISSING),
         content_hash=digest,
     )
+    options_hi_list = options_hi or []
     QuestionOption.objects.bulk_create(
-        QuestionOption(question=q, text=o, order=i, is_correct=has_answer and i == correct_index)
+        QuestionOption(question=q, text=o, text_hi=clean(options_hi_list[i]) if i < len(options_hi_list) else "", order=i, is_correct=has_answer and i == correct_index)
         for i, o in enumerate(options)
     )
-    if explanation:
-        QuestionExplanation.objects.create(question=q, text=explanation)
+    if explanation or explanation_hi:
+        QuestionExplanation.objects.create(question=q, text=explanation, text_hi=clean(explanation_hi))
     return revalidate(q)
 
 

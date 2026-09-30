@@ -35,7 +35,7 @@ def shortfall_brief(owner, exam, paper_ids) -> list[dict]:
     return brief
 
 
-def generate_missing(owner, exam, paper_ids) -> int:
+def generate_missing(owner, exam, paper_ids, language="english") -> int:
     if not ai.is_enabled():
         raise ai.AIUnavailable("ANTHROPIC_API_KEY is not configured")
     total = 0
@@ -47,14 +47,14 @@ def generate_missing(owner, exam, paper_ids) -> int:
             if remaining <= 0:
                 break
             batch = ai.generate_questions(exam.name, item["subject"], item["topics"], min(remaining, 20),
-                                          item["difficulty_distribution"], avoid)
+                                          item["difficulty_distribution"], avoid, language=language)
             for g in batch:
                 try:
                     services.create_question(
-                        owner=owner, exam=exam, subject=subject, topic=g.get("topic"), text=g.get("question", ""),
-                        options=g.get("options", []), correct_index=g.get("correct_index"),
+                        owner=owner, exam=exam, subject=subject, topic=g.get("topic"), text=g.get("question", ""), text_hi=g.get("question_hi", ""),
+                        options=g.get("options", []), options_hi=g.get("options_hi", []), correct_index=g.get("correct_index"),
                         difficulty=g.get("difficulty", "medium"), origin=Question.Origin.AI_GENERATED,
-                        source="AI generated", explanation=g.get("explanation", ""),
+                        source="AI generated", explanation=g.get("explanation", ""), explanation_hi=g.get("explanation_hi", ""),
                         answer_source=Question.AnswerSource.AI,
                     )
                 except (services.DuplicateQuestion, TypeError):

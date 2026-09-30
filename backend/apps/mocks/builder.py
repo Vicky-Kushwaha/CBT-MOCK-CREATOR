@@ -81,7 +81,7 @@ def _pick(pool: list, n: int, distribution: dict) -> list:
 
 
 @transaction.atomic
-def create_mock(owner, exam, paper_ids, title: str | None = None) -> MockTest:
+def create_mock(owner, exam, paper_ids, title: str | None = None, language: str = "english") -> MockTest:
     a = availability(owner, exam, paper_ids)
     if a["status"] != "ok":
         raise InsufficientQuestions(a)
@@ -92,7 +92,7 @@ def create_mock(owner, exam, paper_ids, title: str | None = None) -> MockTest:
 
     mock = MockTest.objects.create(
         owner=owner, exam=exam, title=title or f"{exam.name} Mock", duration_minutes=pattern.duration_minutes,
-        total_marks=pattern.total_marks, instructions=pattern.instructions,
+        total_marks=pattern.total_marks, instructions=pattern.instructions, language=language,
     )
     used, order, rows = set(), 1, []
     for section in pattern.sections.prefetch_related("subjects"):

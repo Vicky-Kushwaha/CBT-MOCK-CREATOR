@@ -313,6 +313,7 @@ function CheckStep({ exam, selected, onBack }: { exam: Exam; selected: number[];
   const [manual, setManual] = useState(false)
   const [jobId, setJobId] = useState<number | null>(null)
   const [title, setTitle] = useState(`${exam.name} Mock Test`)
+  const [language, setLanguage] = useState('english')
   const [error, setError] = useState('')
 
   const avail = useQuery({
@@ -332,12 +333,12 @@ function CheckStep({ exam, selected, onBack }: { exam: Exam; selected: number[];
   }, [job.data?.status])
 
   const generate = useMutation({
-    mutationFn: () => startGeneration(exam.slug, selected),
+    mutationFn: () => startGeneration(exam.slug, selected, language),
     onSuccess: (j) => { setError(''); setJobId(j.id) },
     onError: (e) => setError(errorMessage(e)),
   })
   const create = useMutation({
-    mutationFn: () => createMock(exam.slug, selected, title),
+    mutationFn: () => createMock(exam.slug, selected, title, language),
     onSuccess: (m) => { qc.invalidateQueries({ queryKey: ['mocks'] }); nav(`/mocks/${m.id}/instructions`) },
     onError: (e) => setError(errorMessage(e)),
   })
@@ -436,6 +437,14 @@ function CheckStep({ exam, selected, onBack }: { exam: Exam; selected: number[];
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <label className="mb-2 block font-bold text-slate-800">Give your Mock Test a Name</label>
           <input className="w-full rounded-xl border-2 border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-slate-800 outline-none transition-colors focus:border-indigo-500 focus:bg-white sm:max-w-md" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Weekly Prep #1" />
+          
+          <label className="mt-6 mb-2 block font-bold text-slate-800">Select Test Language</label>
+          <select className="w-full rounded-xl border-2 border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-slate-800 outline-none transition-colors focus:border-indigo-500 focus:bg-white sm:max-w-md" value={language} onChange={(e) => setLanguage(e.target.value)}>
+            <option value="english">English Only</option>
+            <option value="hindi">Hindi Only</option>
+            <option value="both">Bilingual (English & Hindi)</option>
+          </select>
+          <p className="mt-2 text-xs text-slate-500 max-w-md">The AI will generate any missing questions in the selected language format.</p>
         </div>
       )}
 

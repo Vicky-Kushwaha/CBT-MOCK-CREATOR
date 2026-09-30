@@ -27,7 +27,7 @@ class GenerateMissingView(APIView):
         if not ai.is_enabled():
             return Response({"detail": "Claude is not configured. Set ANTHROPIC_API_KEY in .env."}, status=503)
         job = GenerationJob.objects.create(
-            owner=request.user, exam=s.validated_data["exam"], paper_ids=s.validated_data["paper_ids"]
+            owner=request.user, exam=s.validated_data["exam"], paper_ids=s.validated_data["paper_ids"], language=s.validated_data.get("language", "english")
         )
         run_generation_job.delay(job.id)
         return Response(GenerationJobSerializer(job).data, status=status.HTTP_202_ACCEPTED)
@@ -61,7 +61,7 @@ class MockTestViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.D
         s.is_valid(raise_exception=True)
         d = s.validated_data
         try:
-            mock = builder.create_mock(request.user, d["exam"], d["paper_ids"], d["title"] or None)
+            mock = builder.create_mock(request.user, d["exam"], d["paper_ids"], d["title"] or None, d.get("language", "english"))
         except builder.InsufficientQuestions as e:
             return Response({"detail": str(e), "availability": e.availability}, status=status.HTTP_409_CONFLICT)
         return Response(MockTestSerializer(mock).data, status=status.HTTP_201_CREATED)

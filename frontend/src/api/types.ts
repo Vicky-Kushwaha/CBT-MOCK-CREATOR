@@ -26,26 +26,26 @@ export interface Availability {
 export interface GenerationJob { id: number; status: 'pending' | 'running' | 'done' | 'failed'; created_count: number; error: string }
 
 export interface Mock {
-  id: number; title: string; exam: number; exam_name: string; duration_minutes: number; total_marks: number
+  id: number; title: string; exam: number; exam_name: string; language: string; duration_minutes: number; total_marks: number
   instructions: string; total_questions: number; created_at: string
   sections: { name: string; count: number; marks_per_question: number; negative_marks: number }[]
 }
 
 export interface MockAnswerKeyQuestion {
   id: number; order: number; section_name: string; marks: number; negative_marks: number
-  text: string; subject: string | null; topic: string | null; explanation: string | null
-  options: { id: number; text: string; is_correct: boolean }[]
+  text: string; text_hi?: string; subject: string | null; topic: string | null; explanation: string | null; explanation_hi?: string | null
+  options: { id: number; text: string; text_hi?: string; is_correct: boolean }[]
 }
 export interface MockAnswerKeyData { id: number; title: string; questions: MockAnswerKeyQuestion[] }
 
 export interface SessionQuestion {
-  id: number; order: number; section: string; text: string; marks: number; negative_marks: number
-  options: { id: number; text: string }[]
+  id: number; order: number; section: string; text: string; text_hi?: string; marks: number; negative_marks: number
+  options: { id: number; text: string; text_hi?: string }[]
 }
 export interface SessionAnswer { selected_option: number | null; marked: boolean; visited: boolean; time_spent_seconds: number }
 export interface SessionData {
   id: number; status: 'in_progress' | 'submitted' | 'expired'
-  mock: { id: number; title: string; exam_name: string; duration_minutes: number; total_marks: number }
+  mock: { id: number; title: string; exam_name: string; language: string; duration_minutes: number; total_marks: number }
   expires_at: string; server_time: string; remaining_seconds: number; current_index: number
   questions: SessionQuestion[]; answers: Record<string, SessionAnswer>
 }
@@ -56,11 +56,11 @@ export interface HistoryRow {
 
 export interface Bucket { name: string; subject?: string; attempted: number; correct: number; incorrect: number; score: number; time: number; total: number; accuracy: number }
 export interface ResultQuestion {
-  mock_question: number; question_id: number; order: number; section: string; text: string
-  options: { id: number; text: string; is_correct: boolean }[]
+  mock_question: number; question_id: number; order: number; section: string; text: string; text_hi?: string
+  options: { id: number; text: string; text_hi?: string; is_correct: boolean }[]
   selected_option: number | null; correct_option: number | null
   outcome: 'correct' | 'incorrect' | 'unattempted'; marks_awarded: number; marks: number; time_spent: number
-  subject: string; topic: string | null; explanation: string | null
+  subject: string; topic: string | null; explanation: string | null; explanation_hi?: string | null
 }
 export interface ResultData {
   session_id: number; mock: SessionData['mock']
