@@ -17,7 +17,7 @@ export default function Layout() {
       {/* Sidebar - Desktop */}
       <aside className={`hidden md:flex flex-col border-r border-slate-200 bg-white transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}>
         <div className={`flex h-16 items-center border-b border-slate-100 px-4 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-          {!collapsed && <span className="text-lg font-bold tracking-tight text-slate-800">CBT Creator</span>}
+          {!collapsed && <span className="text-lg font-bold tracking-tight text-slate-800">MockMaster</span>}
           <button onClick={() => setCollapsed(!collapsed)} className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {collapsed ? (
@@ -88,7 +88,7 @@ export default function Layout() {
       <main className="flex-1 overflow-y-auto bg-slate-50/50">
         {/* Mobile Header */}
         <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 md:hidden">
-          <span className="text-lg font-bold text-slate-800">CBT Creator</span>
+          <span className="text-lg font-bold text-slate-800">MockMaster</span>
           <button onClick={() => setCollapsed(!collapsed)} className="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600">
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
           </button>

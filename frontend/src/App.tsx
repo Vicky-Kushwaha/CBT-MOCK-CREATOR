@@ -13,6 +13,7 @@ import MockTestsPage from './pages/MockTestsPage'
 import MockAnswerKeyPage from './pages/MockAnswerKeyPage'
 import HistoryPage from './pages/HistoryPage'
 
+import LandingPage from './pages/LandingPage'
 import McpGuidePage from './pages/McpGuidePage'
 
 export default function App() {
@@ -23,7 +24,7 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/exam/:sessionId" element={<ExamPage />} />
         <Route element={<Layout />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/tests" element={<MockTestsPage />} />
           <Route path="/create" element={<CreateMockPage />} />
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/mcp" element={<McpGuidePage />} />
         </Route>
       </Route>
+      <Route path="/" element={<LandingPage />} />
       <Route path="*" element={<div className="p-10 text-center">Page not found.</div>} />
     </Routes>
   )

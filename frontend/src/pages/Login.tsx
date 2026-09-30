@@ -12,7 +12,7 @@ export default function Login() {
   const [busy, setBusy] = useState(false)
   const setAuth = useAuthStore((s) => s.setAuth)
   const nav = useNavigate()
-  const from = (useLocation().state as { from?: string } | null)?.from || '/'
+  const from = (useLocation().state as { from?: string } | null)?.from || '/dashboard'
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -26,14 +26,29 @@ export default function Login() {
 
   return (
     <AuthShell title="Sign in to continue">
-      <form onSubmit={submit} className="space-y-4">
-        <div><label className="label">Username</label>
-          <input className="input" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus required /></div>
-        <div><label className="label">Password</label>
-          <input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required /></div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button className="btn-primary w-full" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-        <p className="text-center text-sm text-ink-soft">No account? <Link className="text-rail underline" to="/register">Register</Link></p>
+      <form onSubmit={submit} className="space-y-5">
+        <div>
+          <label className="label">Username</label>
+          <input className="input" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus required placeholder="Enter your username" />
+        </div>
+        <div>
+          <label className="label">Password</label>
+          <input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
+        </div>
+        
+        {error && (
+          <div className="p-3 rounded-lg bg-red-50 text-sm text-red-600 border border-red-200">
+            {error}
+          </div>
+        )}
+        
+        <button className="btn-primary w-full h-12 text-base mt-2" disabled={busy}>
+          {busy ? 'Signing in…' : 'Sign in'}
+        </button>
+        
+        <p className="text-center text-sm text-ink-soft mt-6">
+          No account? <Link className="text-rail font-semibold hover:text-blue-600 transition-colors" to="/register">Create an account</Link>
+        </p>
       </form>
     </AuthShell>
   )

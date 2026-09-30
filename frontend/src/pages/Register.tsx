@@ -21,22 +21,39 @@ export default function Register() {
       await register(username.trim(), email.trim(), password)
       const t = await login(username.trim(), password)
       setAuth(t.access, t.refresh, username.trim())
-      nav('/', { replace: true })
+      nav('/dashboard', { replace: true })
     } catch (err) { setError(errorMessage(err)) } finally { setBusy(false) }
   }
 
   return (
     <AuthShell title="Create your account">
-      <form onSubmit={submit} className="space-y-4">
-        <div><label className="label">Username</label>
-          <input className="input" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus required /></div>
-        <div><label className="label">Email</label>
-          <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-        <div><label className="label">Password (min 8 characters)</label>
-          <input className="input" type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required /></div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button className="btn-primary w-full" disabled={busy}>{busy ? 'Creating…' : 'Create account'}</button>
-        <p className="text-center text-sm text-ink-soft">Have an account? <Link className="text-rail underline" to="/login">Sign in</Link></p>
+      <form onSubmit={submit} className="space-y-5">
+        <div>
+          <label className="label">Username</label>
+          <input className="input" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus required placeholder="Choose a username" />
+        </div>
+        <div>
+          <label className="label">Email <span className="text-slate-400 font-normal">(Optional)</span></label>
+          <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+        </div>
+        <div>
+          <label className="label">Password <span className="text-slate-400 font-normal">(min 8 characters)</span></label>
+          <input className="input" type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
+        </div>
+        
+        {error && (
+          <div className="p-3 rounded-lg bg-red-50 text-sm text-red-600 border border-red-200">
+            {error}
+          </div>
+        )}
+        
+        <button className="btn-primary w-full h-12 text-base mt-2" disabled={busy}>
+          {busy ? 'Creating…' : 'Create account'}
+        </button>
+        
+        <p className="text-center text-sm text-ink-soft mt-6">
+          Have an account? <Link className="text-rail font-semibold hover:text-blue-600 transition-colors" to="/login">Sign in instead</Link>
+        </p>
       </form>
     </AuthShell>
   )

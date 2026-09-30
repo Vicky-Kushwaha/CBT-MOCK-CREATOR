@@ -9,7 +9,7 @@ export default function McpGuidePage() {
       <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <h2 className="mb-4 text-xl font-bold text-slate-800">What is MCP?</h2>
         <p className="mb-6 text-slate-600 leading-relaxed">
-          The Model Context Protocol (MCP) allows AI models like Claude to directly access and interact with the data in your CBT Mock Creator. 
+          The Model Context Protocol (MCP) allows AI models like Claude to directly access and interact with the data in your MockMaster. 
           By configuring Claude with our custom MCP Server, Claude can automatically answer your queries about exams, subjects, analytics, and dynamically generate or review questions using your database!
         </p>
 
@@ -62,7 +62,7 @@ export default function McpGuidePage() {
             <div>
               <h3 className="font-bold text-slate-800">Restart Claude</h3>
               <p className="mt-1 text-sm text-slate-600">
-                Restart your Claude Desktop application. You will see a new tool integration icon confirming that Claude is successfully connected to the CBT Mock Creator database!
+                Restart your Claude Desktop application. You will see a new tool integration icon confirming that Claude is successfully connected to the MockMaster database!
               </p>
             </div>
           </div>
